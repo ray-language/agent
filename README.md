@@ -9,11 +9,11 @@
 >
 > ```toml
 > [dependencies]
-> agent = "^0.1.0"
+> agent = "^0.2.0"
 > ```
 >
 > Sin índice, la dependencia git directa:
-> `agent = "git+https://github.com/ray-language/agent@v0.1.0"`.
+> `agent = "git+https://github.com/ray-language/agent@v0.2.0"`.
 
 
 Un modelo, tus herramientas y las de servidores MCP, en un bucle: el modelo pide una
@@ -31,8 +31,9 @@ ray add llm
 ray add mcp
 ```
 
-`llm` hace falta siempre, para decir con qué modelo se habla. `mcp` solo si el agente va a usar
-herramientas de un servidor MCP.
+Con `ray add agent` se descargan también los otros dos, porque el paquete depende de ellos.
+Añadirlos a mano deja escrito en tu `ray.toml` qué usa tu programa: `llm` siempre, para decir con
+qué modelo se habla, y `mcp` si el agente va a usar herramientas de un servidor MCP.
 
 ## Un agente con una herramienta
 
@@ -45,7 +46,7 @@ from std/json import Json;
 fn main() -> int {
     let a = agent.new(llm.for_anthropic("claude-opus-5-5", env("ANTHROPIC_API_KEY").unwrap_or("")));
     a.config.system = "You help with arithmetic. Use the tools.";
-    let _ = agent.tool(
+    agent.tool(
         a,
         "add",
         "Adds two integers",
@@ -192,7 +193,7 @@ fn main() -> int {
 | Función | Qué hace |
 |---|---|
 | `new(config) -> Agent` | un agente sobre el modelo de `config`, sin herramientas, en `ASK` |
-| `tool(a, name, description, schema, risk, run) -> Result<int, string>` | añade una herramienta tuya |
+| `tool(a, name, description, schema, risk, run)` | añade una herramienta tuya; un nombre repetido, un riesgo desconocido o un esquema que no es JSON abortan el programa al arrancar |
 | `connect(a, name, session) -> Result<int, string>` | ofrece las herramientas de un servidor MCP; devuelve cuántas |
 | `on_approve(a, f)` | a quién se pregunta antes de lo que necesita permiso |
 | `on_event(a, f)` | a quién se cuenta lo que pasa |
