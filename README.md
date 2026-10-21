@@ -1,19 +1,17 @@
 # `agent` — el bucle de un agente (adicional, **no** embebido)
 
-> **Espejo de solo lectura** — publicado desde
-> [`raylang/packages/agent`](https://github.com/ray-language/raylang/tree/main/packages/agent);
-> el desarrollo y los PRs van al monorepo.
+> **Read-only mirror** — published from [`https://github.com/ray-language/raylang/tree/main/packages/agent`](https://github.com/ray-language/raylang/tree/main/packages/agent); development and pull requests go there.
 >
-> **Instalación** — `ray add agent` en tu proyecto (el índice oficial va por defecto), o a
-> mano en `ray.toml`:
+> **Install** — `ray add agent` in your project (the official index is the default), or by
+> hand in `ray.toml`:
 >
 > ```toml
 > [dependencies]
-> agent = "^0.2.0"
+> agent = "^0.2.1"
 > ```
 >
-> Sin índice, la dependencia git directa:
-> `agent = "git+https://github.com/ray-language/agent@v0.2.0"`.
+> Without an index, the direct git dependency:
+> `agent = "git+https://github.com/ray-language/agent@v0.2.1"`.
 
 
 Un modelo, tus herramientas y las de servidores MCP, en un bucle: el modelo pide una
@@ -155,7 +153,8 @@ fn main() -> int {
 ```
 
 El modelo las ve como `mcp__ray__ray_check`, `mcp__ray__ray_run`… Una que el servidor declara de
-solo lectura es `READ`. Cualquier otra es `EXEC`: un servidor que no dice nada se trata como si
+solo lectura es `READ`; una declarada reversible (`destructiveHint: false`, `serve.write_tool` del
+paquete `mcp`) es `WRITE`. Cualquier otra es `EXEC`: un servidor que no dice nada se trata como si
 lo cambiara todo. Las instrucciones que declare el servidor se suman al prompt de sistema.
 
 ## Ver lo que pasa
